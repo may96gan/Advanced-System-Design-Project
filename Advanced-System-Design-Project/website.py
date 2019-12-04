@@ -1,14 +1,9 @@
 #!/usr/bin/python
 import functools
-from inspect import getfullargspec
-import sys
-from http.server import BaseHTTPRequestHandler, HTTPServer
-import socketserver
-import socket 
+from http.server import BaseHTTPRequestHandler
 import http.server
-from pathlib import Path
-import time
 import re
+
 
 class Website:
 
@@ -26,11 +21,11 @@ class Website:
 
     def run(self, address):
         ws = self
+
         class MyHandler(BaseHTTPRequestHandler):
             def do_GET(self):
                 if self.path in ws.handlers:
                     status_code, body = ws.handlers[self.path]()
-                    
                 else:
                     for k in ws.handlers.keys():
                         r = re.fullmatch(k, self.path)
