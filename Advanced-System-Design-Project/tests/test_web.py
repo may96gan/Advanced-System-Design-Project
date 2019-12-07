@@ -6,7 +6,7 @@ import shutil
 import pytest
 import requests
 
-import web
+from . import web
 
 
 _WEBSERVER_ADDRESS = '127.0.0.1', 8000
