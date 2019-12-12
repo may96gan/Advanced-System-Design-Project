@@ -10,7 +10,7 @@ class Thought:
         self.thought = thought
 
     def __repr__(self):
-        return f'Thought(user_id={self.user_id!r}, \
+        return f'Thought(user_id={self.user_id!r}, 
         timestamp={self.timestamp!r}, thought={self.thought!r})'
 
     def __str__(self):
