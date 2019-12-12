@@ -5,8 +5,8 @@ import time
 import pytest
 import requests
 
-from . import web
-from from .website import Website
+from asd import web
+from from asd.website import Website
 
 
 _ADDRESS = '127.0.0.1', 8000
