@@ -75,11 +75,11 @@ def test_thought(data_dir):
 def test_partial_data(data_dir):
     message = _serialize_thought(_USER_1, _TIMESTAMP_1, _THOUGHT_1)
     with socket.socket() as connection:
-        time.sleep(0.1) # Wait for server to start listening.
+        time.sleep(0.20) # Wait for server to start listening.
         connection.connect(_SERVER_ADDRESS)
         for c in message:
             connection.sendall(bytes([c]))
-            time.sleep(0.01)
+            time.sleep(0.20)
     thought_path = _get_path(data_dir, _USER_1, _TIMESTAMP_1)
     assert thought_path.read_text() == _THOUGHT_1
 
@@ -105,7 +105,7 @@ def test_cli(tmp_path):
         process.communicate()
     thread = threading.Thread(target=run_server)
     thread.start()
-    time.sleep(0.1)
+    time.sleep(0.20)
     _upload_thought(_USER_1, _TIMESTAMP_1, _THOUGHT_1)
     _upload_thought(_USER_2, _TIMESTAMP_2, _THOUGHT_2)
     process.send_signal(signal.SIGINT)
@@ -124,11 +124,11 @@ def _run_server(pipe, data_dir):
 def _upload_thought(user_id, timestamp, thought):
     message = _serialize_thought(user_id, timestamp, thought)
     with socket.socket() as connection:
-        time.sleep(0.1) # Wait for server to start listening.
+        time.sleep(0.20 # Wait for server to start listening.
         connection.settimeout(2)
         connection.connect(_SERVER_ADDRESS)
         connection.sendall(message)
-    time.sleep(0.2) # Wait for server to write thought.
+    time.sleep(0.20) # Wait for server to write thought.
 
 
 def _serialize_thought(user_id, timestamp, thought):
