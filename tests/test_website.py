@@ -6,7 +6,7 @@ import pytest
 import requests
 
 from asd import web
-from from asd.website import Website
+from asd.website import Website
 
 
 _ADDRESS = '127.0.0.1', 8000
