@@ -20,6 +20,6 @@ def listener():
 def test_context_manager(listener):
     assert socket.socket().connect_ex((_HOST, _PORT)) != 0
     with listener:
-        time.sleep(0.1)
+        time.sleep(0.20)
         assert socket.socket().connect_ex((_HOST, _PORT)) == 0
     assert socket.socket().connect_ex((_HOST, _PORT)) != 0
