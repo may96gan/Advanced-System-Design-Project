@@ -6,7 +6,7 @@ import socket
 import struct
 from datetime import datetime
 import threading
-from cli import CommandLineInterface
+from .cli import CommandLineInterface
 
 
 cli = CommandLineInterface()
