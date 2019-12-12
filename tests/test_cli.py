@@ -94,7 +94,7 @@ def test_client():
     server = multiprocessing.Process(target=run_server)
     server.start()
     try:
-        time.sleep(0.1)
+        time.sleep(0.20)
         host, port = _SERVER_ADDRESS
         process = subprocess.Popen(
             ['python', _CLIENT_PATH, f'{host}:{port}', '1', "I'm hungry"],
