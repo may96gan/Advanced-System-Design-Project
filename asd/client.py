@@ -3,7 +3,7 @@ import sys
 import socket
 import struct
 import time
-from .cli import CommandLineInterface
+from asd.cli import CommandLineInterface
 
 cli = CommandLineInterface()
 
