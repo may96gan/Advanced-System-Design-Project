@@ -17,7 +17,7 @@ class Thought:
 
     def __str__(self):
         s = f'[{self.timestamp:%Y-%m-%d %H:%M:%S}]'
-        s1 f'user {self.user_id}: {self.thought}'
+        s1 = f'user {self.user_id}: {self.thought}'
         return s+s1
 
     def __eq__(self, other):
