@@ -11,7 +11,7 @@ from asd.website import Website
 
 _ADDRESS = '127.0.0.1', 8000
 _URL = f'http://{_ADDRESS[0]}:{_ADDRESS[1]}'
-_ROOT = pathlib.Path(__file__).absolute().parent.parent
+_ROOT = pathlib.Path(__file__).absolute().parent.parent / 'asd'
 _WEBSERVER_PATH = _ROOT / 'web.py'
 _DATA_DIR = _ROOT / 'data'
 
