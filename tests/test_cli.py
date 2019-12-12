@@ -10,7 +10,7 @@ import time
 
 import pytest
 
-from .Advanced-System-Design-Project import cli.CommandLineInterface
+from Advanced-System-Design-Project import cli.CommandLineInterface
 
 
 _SERVER_ADDRESS = '127.0.0.1', 5000
