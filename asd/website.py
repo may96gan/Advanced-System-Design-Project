@@ -7,15 +7,14 @@ import re
 
 class Website:
 
-    def __init__(self):
-        self.handlers = {}
+    handlers = {}
 
     def route(self, path):
         def decorator(f):
-            self.handlers[path] = f
             @functools.wraps(f)
-            def wrapper(args, *kwargs):
-                return f(args, *kwargs)
+            def wrapper(*args, **kwargs):
+                return f(*args, **kwargs)
+            self.handlers[path] = f
             return wrapper
         return decorator
 
@@ -24,16 +23,19 @@ class Website:
 
         class MyHandler(BaseHTTPRequestHandler):
             def do_GET(self):
-                if self.path in ws.handlers:
-                    status_code, body = ws.handlers[self.path]()
+                func = None
+                func_args = ""
+                for k in ws.handlers.keys():
+                    r = re.match(fr"^{k}$", self.path)
+                    if r:
+                        if k != '/':
+                            func_args = r.group(1)
+                        func = ws.handlers[k]
+                if func is None:
+                    self.send_response(404)
+                    self.end_headers()
                 else:
-                    for k in ws.handlers.keys():
-                        r = re.fullmatch(k, self.path)
-                        if r:
-                            status_code, body = ws.handlers[k](*r.groups())
-                            break
-                        else:
-                            status_code, body = 404, ''
+                    status_code, body = func(*func_args)
                     self.send_response(status_code)
                     self.send_header('Content-type', 'text/html')
                     self.end_headers()
