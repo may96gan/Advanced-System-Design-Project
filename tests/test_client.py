@@ -9,7 +9,7 @@ import time
 
 import pytest
 
-from . import client
+from asd import client
 
 
 _SERVER_ADDRESS = '127.0.0.1', 5000
