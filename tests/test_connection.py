@@ -16,7 +16,7 @@ def server():
     server.bind(('0.0.0.0', _PORT))
     server.listen(1000)
     try:
-        time.sleep(0.1)
+        time.sleep(0.20)
         yield server
     finally:
         server.close()
