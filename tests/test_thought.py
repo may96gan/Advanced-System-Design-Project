@@ -3,7 +3,7 @@ import struct
 
 import pytest
 
-from .thought import Thought
+from asd.thought import Thought
 
 
 user_id = 1
