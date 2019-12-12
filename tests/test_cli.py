@@ -15,7 +15,7 @@ from asd.cli import CommandLineInterface
 
 _SERVER_ADDRESS = '127.0.0.1', 5000
 _SERVER_BACKLOG = 1000
-_ROOT = pathlib.Path(__file__).absolute().parent.parent
+_ROOT = pathlib.Path(__file__).absolute().parent.parent / 'asd'
 _SERVER_PATH = _ROOT / 'server.py'
 _CLIENT_PATH = _ROOT / 'client.py'
 
