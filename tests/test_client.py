@@ -14,7 +14,7 @@ from asd import client
 
 _SERVER_ADDRESS = '127.0.0.1', 5000
 _SERVER_BACKLOG = 1000
-_CLIENT_PATH = pathlib.Path(__file__).absolute().parent.parent / 'client.py'
+_CLIENT_PATH = pathlib.Path(__file__).absolute().parent.parent / 'asd' / 'client.py'
 
 _HEADER_FORMAT = 'LLI'
 _HEADER_SIZE = struct.calcsize(_HEADER_FORMAT)
