@@ -3,7 +3,7 @@ import time
 
 import pytest
 
-from .utils.listener import Listener
+from asd.utils.listener import Listener
 
 
 _PORT = 1234
