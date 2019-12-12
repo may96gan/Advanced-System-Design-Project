@@ -10,13 +10,13 @@ class Thought:
         self.thought = thought
 
     def __repr__(self):
-        s = f'Thought(user_id={self.user_id!r},'
-        s1 = f'timestamp={self.timestamp!r},'
+        s = f'Thought(user_id={self.user_id!r}, '
+        s1 = f'timestamp={self.timestamp!r}, '
         s2 = f'thought={self.thought!r})'
         return s+s1+s2
 
     def __str__(self):
-        s = f'[{self.timestamp:%Y-%m-%d %H:%M:%S}]'
+        s = f'[{self.timestamp:%Y-%m-%d %H:%M:%S}] '
         s1 = f'user {self.user_id}: {self.thought}'
         return s+s1
 
