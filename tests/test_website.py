@@ -5,13 +5,13 @@ import time
 import pytest
 import requests
 
-from asd import web
-from asd.website import Website
+from cortex import web
+from cortex.website import Website
 
 
 _ADDRESS = '127.0.0.1', 8000
 _URL = f'http://{_ADDRESS[0]}:{_ADDRESS[1]}'
-_ROOT = pathlib.Path(__file__).absolute().parent.parent / 'asd'
+_ROOT = pathlib.Path(__file__).absolute().parent.parent / 'cortex'
 _WEBSERVER_PATH = _ROOT / 'web.py'
 _DATA_DIR = _ROOT / 'data'
 

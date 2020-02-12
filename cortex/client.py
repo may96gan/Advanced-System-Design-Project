@@ -1,9 +1,14 @@
 #!/usr/bin/python
-import sys
 import socket
 import struct
+import sys
 import time
-from asd.cli import CommandLineInterface
+
+import requests
+
+from google.protobuf.json_format import MessageToJson
+from .cli import CommandLineInterface
+from .Reader import Reader
 
 cli = CommandLineInterface()
 
@@ -11,6 +16,20 @@ cli = CommandLineInterface()
 @cli.command
 def upload(address, user, thought):
     upload_thought(address, user, thought)
+
+def upload_sample(host, port, path):
+    #conn = socket.socket()
+    #address = host, port
+    _configUrl = f'http://{host}:{port}/config'
+    _snapUrl = f'http:/{host}:{port}/snapshot'
+    _configRes = requests.get(_configUrl)
+    parsers = _configRes.json().parsers
+    print(f'in client got parsers = {parsers}')
+    #conn.connect((address))
+    reader = Reader(path)
+    for snapshot in reader:
+        _snapRes = requests.post(_snapUrl, MessageToJson(snapshot))
+
 
 
 def upload_thought(address, user_id, thought):

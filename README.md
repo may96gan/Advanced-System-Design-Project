@@ -33,7 +33,7 @@ An example package. See [full documentation](https://advanced-system-design-foob
 
 ## Usage
 
-The `asd` packages provides the following classes:
+The `cortex` packages provides the following classes:
 
 - `Foo`
 
@@ -65,10 +65,10 @@ The `asd` packages provides the following classes:
     'bar'
     ```
 
-The `asd` package also provides a command-line interface:
+The `cortex` package also provides a command-line interface:
 
 ```sh
-$ python -m asd
+$ python -m cortex
 foobar, version 0.1.0
 ```
 
@@ -80,14 +80,14 @@ non-zero code).
 The CLI provides the `client` command, with the `upload' subcommand:
 
 ```sh
-$ python -m asd client upload <host:port> <user_id> <thought>
+$ python -m cortex client upload <host:port> <user_id> <thought>
 
 ```
 
 The CLI further provides the `server` command, with the `run` subcommand.
 
 ```sh
-$ python -m asd server run <host:port> <path to data_dir>
+$ python -m cortex server run <host:port> <path to data_dir>
 ```
 
 

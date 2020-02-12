@@ -6,12 +6,12 @@ import shutil
 import pytest
 import requests
 
-from asd import web
+from cortex import web
 
 
 _WEBSERVER_ADDRESS = '127.0.0.1', 8000
 _WEBSERVER_URL = 'http://localhost:8000'
-_ROOT_DIR = pathlib.Path(__file__).absolute().parent.parent / 'asd'
+_ROOT_DIR = pathlib.Path(__file__).absolute().parent.parent / 'cortex'
 _WEBSERVER_PATH = _ROOT_DIR / 'web.py'
 _DATA_DIR = _ROOT_DIR / 'data'
 
