@@ -14,8 +14,8 @@ cli = CommandLineInterface()
 
 
 @cli.command
-def upload(address, user, thought):
-    upload_thought(address, user, thought)
+def upload(host, port, path):
+    upload_sample(host, port, path)
 
 def upload_sample(host, port, path):
     #conn = socket.socket()
@@ -28,6 +28,7 @@ def upload_sample(host, port, path):
     #conn.connect((address))
     reader = Reader(path)
     for snapshot in reader:
+        print("first snap")
         _snapRes = requests.post(_snapUrl, MessageToJson(snapshot))
 
 
@@ -54,7 +55,7 @@ def main(argv):
         print(f'USAGE: {argv[0]} <address> <user_id> <thought>')
         return 1
     try:
-        upload_thought(sys.argv[1], sys.argv[2], sys.argv[3])
+        upload_sample(sys.argv[1], sys.argv[2], sys.argv[3])
 
     except Exception as error:
         print(f'ERROR: {error}')

@@ -4,3 +4,5 @@ from .server import run_server
 from .thought import Thought
 from . import web
 from . import website
+
+version = '0.1.0'
