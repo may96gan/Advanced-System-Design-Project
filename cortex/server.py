@@ -9,8 +9,11 @@ import threading
 from cortex.cli import CommandLineInterface
 from flask import Flask
 from flask import request
-
-
+import pika
+from . import cor_pb2
+import time
+from google.protobuf.json_format import MessageToJson
+import json
 cli = CommandLineInterface()
 
 
@@ -105,6 +108,9 @@ class CortexHandler(threading.Thread):
 
 def run_server(host, port, publish):
     publish = publish
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+    channel = connection.channel()
+    channel.queue_declare(queue='current_snapshots')
     app = Flask(__name__)
 
     @app.route('/config', methods = ['GET'])
@@ -116,7 +122,18 @@ def run_server(host, port, publish):
     @app.route('/snapshot', methods = ['POST'])
     def newSnapshot():
         print("in server snapshot")
-        snapshot = request.get_data()
+        #snapshot = json.loads(request.get_json())
+        snapshot = request.get_json()
+        ts = type(snapshot)
+        print(f'type is {ts}')
+        #json_obj = cor_pb2.Snapshot.ParseFromString(snapshot)
+        #print(snapshot['feelings'])
+        #print(snapshot['pose'])
+        time.sleep(3)
+        channel.basic_publish(exchange='',
+                              routing_key='current_snapshots',
+                              #body=json_obj.SerializeToString())
+                              body=snapshot)
         print("done")
         return "ok"
         #publish(snapshot)

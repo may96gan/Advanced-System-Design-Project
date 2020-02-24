@@ -34,7 +34,10 @@ def upload_sample(host, port, path):
     reader = Reader(path)
     for snapshot in reader.read():
         #print("first snap")
-        _snapRes = requests.post(_snapUrl, MessageToJson(snapshot))
+        print(snapshot.datetime)
+        #print(type(snapshot))
+        print(snapshot.feelings)
+        _snapRes = requests.post(_snapUrl, json=MessageToJson(snapshot))
         print(_snapRes)
 
 
