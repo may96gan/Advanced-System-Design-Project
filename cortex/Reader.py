@@ -14,7 +14,8 @@ class Reader:
         if not message:
             self._eof = True
         self.user = User()
-        self.user.parse_from_bytes(message)
+        self.user.ParseFromString(message)
+        print(f'id={self.user.user_id} name = {self.user.username}')
     def read(self):
         while not self._eof:
             yield self._next_snapshot()
@@ -25,5 +26,5 @@ class Reader:
         if not message:
             self._eof = True
         snapshot = Snapshot()
-        snapshot.parse_from_bytes(message)
+        snapshot.ParseFromString(message)
         return snapshot

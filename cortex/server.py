@@ -117,7 +117,8 @@ def run_server(host, port, publish):
     def newSnapshot():
         print("in server snapshot")
         snapshot = request.get_data()
-        print(snapshot)
+        print("done")
+        return "ok"
         #publish(snapshot)
 
     app.run(host = host,port = port,threaded=True)

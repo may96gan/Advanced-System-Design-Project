@@ -20,16 +20,22 @@ def upload(host, port, path):
 def upload_sample(host, port, path):
     #conn = socket.socket()
     #address = host, port
+    print("MAY 1")
     _configUrl = f'http://{host}:{port}/config'
-    _snapUrl = f'http:/{host}:{port}/snapshot'
-    _configRes = requests.get(_configUrl)
-    parsers = _configRes.json().parsers
-    print(f'in client got parsers = {parsers}')
+    print("MAY 2")
+    _snapUrl = f'http://{host}:{port}/snapshot'
+    print("MAY 3")
+    #_configRes = requests.get(_configUrl)
+    #print(_configRes.json())
+    #parsers = _configRes.json().parsers
+    #print("MAY 5")
+    #print(f'in client got parsers = {parsers}')
     #conn.connect((address))
     reader = Reader(path)
-    for snapshot in reader:
-        print("first snap")
+    for snapshot in reader.read():
+        #print("first snap")
         _snapRes = requests.post(_snapUrl, MessageToJson(snapshot))
+        print(_snapRes)
 
 
 

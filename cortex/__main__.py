@@ -40,13 +40,13 @@ def client(context):
 
 
 @client.command('upload')
-@click.argument('address', type=str)
-@click.argument('user', type=int)
-@click.argument('thought', type=str)
+@click.argument('host', type=str)
+@click.argument('port', type=int)
+@click.argument('path', type=str)
 @click.pass_obj
-def client_upload(obj, address, user, thought):
+def client_upload(obj, host, port, path):
     client = obj['client']
-    log(client.upload_thought(address, user, thought))
+    log(client.upload_sample(host, port, path))
 
 
 
@@ -57,12 +57,13 @@ def server(context):
 
 
 @server.command('run')
-@click.argument('address', type=str)
-@click.argument('data_dir', type=str)
+@click.argument('host', type=str)
+@click.argument('port', type=int)
+@click.argument('publish', type=str)
 @click.pass_obj
-def server_run(obj, address, data_dir):
+def server_run(obj, host, port, publish):
     server = obj['server']
-    log(server.run_server(address, data_dir))
+    log(server.run_server(host, port,print))
 
 
 
