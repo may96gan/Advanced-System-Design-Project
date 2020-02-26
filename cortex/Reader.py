@@ -16,6 +16,8 @@ class Reader:
         self.user = User()
         self.user.ParseFromString(message)
         print(f'id={self.user.user_id} name = {self.user.username}')
+    def get_user(self):
+        return self.user
     def read(self):
         while not self._eof:
             yield self._next_snapshot()
@@ -28,3 +30,5 @@ class Reader:
         snapshot = Snapshot()
         snapshot.ParseFromString(message)
         return snapshot
+    def bytesToString(snapshot):
+        return snapshot.SerializeToString()

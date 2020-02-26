@@ -6,20 +6,36 @@ import socket
 import struct
 from datetime import datetime
 import threading
-from cortex.cli import CommandLineInterface
 from flask import Flask
 from flask import request
 import pika
-from . import cor_pb2
-import time
-from google.protobuf.json_format import MessageToJson
+import click 
 import json
-cli = CommandLineInterface()
+
+class Log:
+    
+    def __init__(self):
+        self.quiet = False
+        self.traceback = False
+
+    def __call__(self, message):
+        if self.quiet:
+            return
+        if self.traceback and sys.exc_info(): # there's an active exception
+            message += os.linesep + traceback.format_exc().strip()
+        click.echo(message)
 
 
-@cli.command
-def run(address, data):
-    run_serverOrig(address, data)
+log = Log()
+
+@click.group()
+@click.option('-q', '--quiet', is_flag=True)
+@click.option('-t', '--traceback', is_flag=True)
+def main(quiet=False, traceback=False):
+    log.quiet = quiet
+    log.traceback = traceback
+
+
 
 
 
@@ -105,7 +121,10 @@ class CortexHandler(threading.Thread):
         finally:
             self.lock.release()
 
-
+@main.command('run-server')
+@click.option('-h','--host', default='127.0.0.1')
+@click.option('-p','--port', default=8000)
+@click.argument('publish', default='rabbitmq://127.0.0.1:5672/')
 def run_server(host, port, publish):
     publish = publish
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
@@ -122,18 +141,14 @@ def run_server(host, port, publish):
     @app.route('/snapshot', methods = ['POST'])
     def newSnapshot():
         print("in server snapshot")
-        #snapshot = json.loads(request.get_json())
-        snapshot = request.get_json()
-        ts = type(snapshot)
-        print(f'type is {ts}')
-        #json_obj = cor_pb2.Snapshot.ParseFromString(snapshot)
-        #print(snapshot['feelings'])
-        #print(snapshot['pose'])
-        time.sleep(3)
+        snapshot = request.get_data()
         channel.basic_publish(exchange='',
                               routing_key='current_snapshots',
-                              #body=json_obj.SerializeToString())
                               body=snapshot)
+        mj = json.loads(snapshot)
+        if mj:
+            print(mj['feelings'])
+            print(mj['username'])
         print("done")
         return "ok"
         #publish(snapshot)
@@ -174,19 +189,5 @@ def signal_handler(sig, frame):
     sys.exit(0)
 
 
-def main(argv):
-    if len(argv) != 3:
-        print(f'USAGE: {argv[0]} <address>')
-        return 1
-    try:
-        run_serverOrig(sys.argv[1], sys.argv[2])
-        signal.signal(signal.SIGINT, signal_handler)
-        signal.pause()
-
-    except Exception as error:
-        print(f'ERROR: {error}')
-        return 1
-
-
 if __name__ == '__main__':
-    cli.main()
+    main()
