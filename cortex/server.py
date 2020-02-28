@@ -6,12 +6,13 @@ import socket
 import struct
 from datetime import datetime
 import threading
+from cortex.cli import CommandLineInterface
 from flask import Flask
 from flask import request
 import pika
-import click 
-import json
+import click
 
+cli = CommandLineInterface()
 class Log:
     
     def __init__(self):
@@ -27,7 +28,6 @@ class Log:
 
 
 log = Log()
-
 @click.group()
 @click.option('-q', '--quiet', is_flag=True)
 @click.option('-t', '--traceback', is_flag=True)
@@ -36,6 +36,10 @@ def main(quiet=False, traceback=False):
     log.traceback = traceback
 
 
+
+@cli.command
+def run(address, data):
+    run_serverOrig(address, data)
 
 
 
@@ -129,7 +133,8 @@ def run_server(host, port, publish):
     publish = publish
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
     channel = connection.channel()
-    channel.queue_declare(queue='current_snapshots')
+    channel.exchange_declare(exchange='snapshots',exchange_type='fanout')
+    #channel.queue_declare(queue='current_snapshots')
     app = Flask(__name__)
 
     @app.route('/config', methods = ['GET'])
@@ -142,13 +147,9 @@ def run_server(host, port, publish):
     def newSnapshot():
         print("in server snapshot")
         snapshot = request.get_data()
-        channel.basic_publish(exchange='',
-                              routing_key='current_snapshots',
+        channel.basic_publish(exchange='snapshots',
+                              routing_key='',
                               body=snapshot)
-        mj = json.loads(snapshot)
-        if mj:
-            print(mj['feelings'])
-            print(mj['username'])
         print("done")
         return "ok"
         #publish(snapshot)
