@@ -33,13 +33,15 @@ def parse_pose(snapshot):
                         user_bday = json_user['birthday'],
                         user_gender = json_user.get('gender',2),
                         snap_datetime = json_user.get('datetime'),
-                        tx = json_snap_t.get('x',0),
-                        ty = json_snap_t.get('y',0),
-                        tz = json_snap_t.get('z',0),
-                        rx = json_snap_r.get('x',0),
-                        ry = json_snap_r.get('y',0),
-                        rz = json_snap_r.get('z',0),
-                        rw = json_snap_r.get('w',0),
+                        pose = dict(
+                            tx = json_snap_t.get('x',0),
+                            ty = json_snap_t.get('y',0),
+                            tz = json_snap_t.get('z',0),
+                            rx = json_snap_r.get('x',0),
+                            ry = json_snap_r.get('y',0),
+                            rz = json_snap_r.get('z',0),
+                            rw = json_snap_r.get('w',0),
+                        ),
     ))
 #parse_pose.field = 'pose'
 
@@ -54,10 +56,12 @@ def parse_feelings(snapshot):
         user_bday = json_user['birthday'],
         user_gender = json_user.get('gender',2),
         snap_datetime = json_user.get('datetime'),
-        hunger = json_snap.get('hunger',0),
-        thirst = json_snap.get('thirst',0),
-        exhaustion = json_snap.get('exhaustion',0),
-        happiness = json_snap.get('happiness',0),
+        feelings = dict(
+            hunger = json_snap.get('hunger',0),
+            thirst = json_snap.get('thirst',0),
+            exhaustion = json_snap.get('exhaustion',0),
+            happiness = json_snap.get('happiness',0),
+            ),
     ))
 #parse_feelings.field = 'feelings'
 
