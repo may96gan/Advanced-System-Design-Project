@@ -1,5 +1,7 @@
 import pymongo
 import json 
+from bson.objectid import ObjectId
+
 class Saver:
     def __init__(self, database_url):
         self.database_url = database_url
@@ -11,6 +13,7 @@ class Saver:
         user_id = (json.loads(data))['user_id']
         print("USER ID = ")
         print(user_id)
+        print(f'top name = {topicName}')
         datetime = (json.loads(data))['snap_datetime']
         curUser = self.users.find_one({'user_id':user_id})
         if curUser: #and curUser.count() > 0:  user already exists in out users db, need to update
@@ -21,9 +24,12 @@ class Saver:
                 print("CUR SNAP EXISTS")
                 addVal = {topicName:(json.loads(data))[topicName]}
                 curSnap = {**curSnap, **addVal}
+                print("in saver after cur snap, its now:")
+                print(curSnap)
             else:
                 print("CUR SNAP NOT EXISTS")
-                curSnap = {'user_id':user_id,
+                curSnap = {'_id':str(ObjectId()),
+                           'user_id':user_id,
                            'datetime':datetime,
                            topicName:(json.loads(data))[topicName],
                            }
