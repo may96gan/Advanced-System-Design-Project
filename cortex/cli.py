@@ -14,7 +14,7 @@ def main(quiet=False, traceback=False):
 
 @main.command('get-users')
 @click.option('-h','--host', default='127.0.0.1')
-@click.option('-p','--port', default=8000)
+@click.option('-p','--port', default=5000)
 def get_users(host, port):
     _url = f'http://{host}:{port}/users'
     result = requests.get(_url).json()['currentUsers']
@@ -27,7 +27,7 @@ def get_users(host, port):
 
 @main.command('get-user')
 @click.option('-h','--host', default='127.0.0.1')
-@click.option('-p','--port', default=8000)
+@click.option('-p','--port', default=5000)
 @click.argument('user_id', type=int)
 def get_user(host, port, user_id):
     _url = f'http://{host}:{port}/users/{user_id}'
@@ -46,7 +46,7 @@ def get_user(host, port, user_id):
 
 @main.command('get-snapshots')
 @click.option('-h','--host', default='127.0.0.1')
-@click.option('-p','--port', default=8000)
+@click.option('-p','--port', default=5000)
 @click.argument('user_id', type=int)
 def get_snapshots(host, port, user_id):
     _url = f'http://{host}:{port}/users/{user_id}/snapshots'
@@ -64,7 +64,7 @@ def get_snapshots(host, port, user_id):
 
 @main.command('get-snapshot')
 @click.option('-h','--host', default='127.0.0.1')
-@click.option('-p','--port', default=8000)
+@click.option('-p','--port', default=5000)
 @click.argument('user_id', type=int)
 @click.argument('snapshot_id', type=str)
 def get_snapshot(host, port, user_id, snapshot_id):
@@ -79,7 +79,7 @@ def get_snapshot(host, port, user_id, snapshot_id):
 
 @main.command('get-result')
 @click.option('-h','--host', default='127.0.0.1')
-@click.option('-p','--port', default=8000)
+@click.option('-p','--port', default=5000)
 @click.argument('user_id', type=int)
 @click.argument('snapshot_id', type=str)
 @click.argument('result', type=str)

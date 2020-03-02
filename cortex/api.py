@@ -34,9 +34,9 @@ def main(quiet=False, traceback=False):
 
 @main.command('run-server')
 @click.option('-h','--host', default='127.0.0.1')
-@click.option('-p','--port', default=8000)
+@click.option('-p','--port', default=5000)
 @click.option('-d', '--database', default='mongodb://localhost:27017/')
-def run_api_server(host='127.0.0.1', port=8000, database='mongodb://localhost:27017/'):
+def run_api_server(host='127.0.0.1', port=5000, database='mongodb://localhost:27017/'):
     client = pymongo.MongoClient(database)
     db = client.db
 
