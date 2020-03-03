@@ -2,8 +2,8 @@
     <head>
         <title> Cortex User's Snapshots </title>
     </head>
-    <body>
-        <h1> User: </h1>
+    <body style="background-color:teal;text-align:center;">
+        <h1 style="color:indigo;"> User: </h1>
         <ul>
             
               <li>User id: {{ user.user_id }}</li>
@@ -11,12 +11,21 @@
 
         </ul>
 
-        <h1> User's Snapshots: </h1>
+        <h1 style="color:lavender;"> User's Snapshots: </h1>
         <ul>
-            {% for snapshot in snapshots %}
-              <li>{{ snapshot._id }}</li>
-              <li>{{ snapshot.datetime }}</li>
-            {% endfor %}  
+            <table style="width:100%">
+                <tr>
+                    <th>Snapshot id</th>
+                    <th>Snapshot Datetime</th>
+                </tr>
+                {% for snapshot in snapshots %}
+                <tr>
+                    <th>{{ snapshot._id }}</th>
+                    <th>{{ snapshot.datetime }}</th>
+                </tr>
+                {% endfor %}  
+            </table>
+
         </ul>
     </body>
 </html>

@@ -2,13 +2,25 @@
     <head>
         <title> Cortex Users </title>
     </head>
-    <body>
-        <h1> Users: </h1>
+    <body style="background-color:powderblue;text-align:center;">
+        <h1 style="color:indigo;"> Users: </h1>
         <ul>
-            {% for user in users %}
-              <li>{{ user.user_id }}</li>
-              <li>{{ user.username }}</li>
-            {% endfor %}  
+            <table style="width:100%">
+                <tr>
+                    <th>User id</th>
+                    <th>Username</th>
+                </tr>
+                {% for user in users %}
+                <tr>
+                    <li>{{ user.user_id }}</li>
+                    <li>{{ user.username }}</li>
+                </tr>
+                {% endfor %}  
+            </table>
         </ul>
     </body>
 </html>
+
+
+  
+  
