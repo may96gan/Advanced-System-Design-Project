@@ -5,11 +5,15 @@
     <body style="background-color:lightseagreen;text-align:center;">
         <h1 style="color:lavender;"> Snapshot's {{ name }} Result: </h1>
         <ul>
-            
-              <li>{{ result }}</li>
+            <table style="width: 100%;">
+                {% for kv in results %}
+                <tr>
+                    <th>{{ kv.0 }}</th>
+                    <th>{{ kv.1 }}</th>
+                </tr>
+                {% endfor %}
+            </table>
 
         </ul>
     </body>
 </html>
-
-
