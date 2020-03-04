@@ -6,7 +6,7 @@
         <h1 style="color:indigo;"> User: </h1>
         <ul>
             
-              <li>User id: {{ user.user_id }}</li>
+              <li><a href="/users/{{user.user_id}}">User id: {{ user.user_id }}</a></li>
               <li>User name: {{ user.username }}</li>
 
         </ul>
@@ -15,7 +15,10 @@
         <ul>
               <li> id: {{ id }}</li>
               <li>Datetime: {{ datetime }}</li>
-              <li>Available Results: {{ results }}</li>
+              <li>Available Results: </li>
+	      {%for r in results%}
+	      <li><a href="/users/{{user.user_id}}/snapshots/{{id}}/{{r}}">{{r}}</a></li>
+	      {%endfor%}
         </ul>
     </body>
 </html>

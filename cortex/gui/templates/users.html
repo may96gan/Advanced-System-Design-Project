@@ -9,12 +9,15 @@
                 <tr>
                     <th>User id</th>
                     <th>Username</th>
+                    <th>Snapshots</th>
                 </tr>
                 {% for user in users %}
                 <tr>
-                    <th>{{ user.user_id }}</th>
+                    <th><a href="/users/{{user.user_id}}">{{ user.user_id }}</a></th>
                     <th>{{ user.username }}</th>
+                    <th><a href="/users/{{user.user_id}}/snapshots">Click here</a></th>
                 </tr>
+		
                 {% endfor %}  
             </table>
         </ul>

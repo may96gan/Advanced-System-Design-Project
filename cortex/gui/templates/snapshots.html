@@ -6,7 +6,7 @@
         <h1 style="color:indigo;"> User: </h1>
         <ul>
             
-              <li>User id: {{ user.user_id }}</li>
+              <li><a href="/users/{{user.user_id}}">User id: {{ user.user_id }}</a></li>
               <li>User name: {{ user.username }}</li>
 
         </ul>
@@ -20,7 +20,7 @@
                 </tr>
                 {% for snapshot in snapshots %}
                 <tr>
-                    <th>{{ snapshot._id }}</th>
+                    <th><a href="/users/{{user.user_id}}/snapshots/{{snapshot._id}}">{{ snapshot._id }}</a></th>
                     <th>{{ snapshot.datetime }}</th>
                 </tr>
                 {% endfor %}  
