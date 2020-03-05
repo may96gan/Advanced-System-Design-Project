@@ -31,11 +31,41 @@ An example package. See [full documentation](https://advanced-system-design-foob
 
 ## Usage
 
+First, run the following commands:
+```pycon
+import json, pika
+from cortex.parsers import run_parser
+from cortex.saver import Saver
+connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
+channel = connection.channel()
+channel.exchange_declare(exchange='snapshots', exchange_type='fanout')
+result = channel.queue_declare(queue='', exclusive=True)
+queue_name = result.method.queue
+channel.queue_bind(exchange='snapshots',queue=queue_name)#channel.queue_declare('current_snapshots')
+
+def callback(channel,method,properties,body):
+    print("start snap")
+    saver = Saver('mongodb://localhost:27017/')
+    f = run_parser('feelings',body)
+    if f:
+        saver.save('feelings',f)
+    p=run_parser('pose',body)
+    if p:
+        saver.save('pose',p)
+    print("done snap")
+
+
+channel.basic_consume(queue=queue_name, auto_ack=True, on_message_callback=callback)
+
+channel.start_consuming()
+```
+
 The `cortex` packages provides the following packages:
 
 - `server`
 
     The server listen on host:port and pass received messages to message queue.
+    (Run server at another shell).
 
     ```pycon
     >>> from cortex.server import run_server
@@ -47,6 +77,7 @@ The `cortex` packages provides the following packages:
     This package provides the upload_sample function, 
     which accepts host, port and a path,
     reads the sample in path and uploads it to host:port.
+    (Run client at another shell).
 
     ```pycon
     >>> from cortex.client import upload_sample
@@ -80,19 +111,25 @@ The `cortex` packages provides the following packages:
     ```
 - `api`
 
-    listen on host:port and serve data from database_url
+    listen on host:port and serve data from database_url.
     
     ```pycon
     >>> from cortex.api import run_api_server
     >>> run_api_server(
     ...     host = '127.0.0.1',
     ...     port = 5000,
-    ...     database_url = 'postgresql://127.0.0.1:5432',
+    ...     database_url = 'mongodb://localhost:27017/',
     ... )
-    ```
-listen on host:port and serve data from database_url
-
-
+    ```    
+    
+  Api is consumed and reflected by CLI:
+  ```sh
+  $ python -m cortex.cli get-users
+  $ python -m cortex.cli get-user <user_id>
+  $ python -m cortex.cli get-snapshots <user_id>
+  $ python -m cortex.cli get-snapshot <user_id> <snapshot_id>
+  $ python -m cortex.cli get-result <user_id> <snapshot_id> <parser's name>
+  ```
 
 The `cortex` package also provides a command-line interface:
 
@@ -114,5 +151,18 @@ $ python -m cortex.server run-server \
       '<URL to a message queue> (default=rabbitmq://127.0.0.1:5672/')
 
 ```
+
+The `cortex` package also provides a graphical user interface:
+(You can also run this command with no arguments. Those are the default arguments.)
+
+```sh
+>>> from cortex.gui import run_server
+>>> run_server(
+...     host = '127.0.0.1',
+...     port = 8080,
+...     database_url = 'mongodb://localhost:27017/',
+... )
+```
+
 
 
