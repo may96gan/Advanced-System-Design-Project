@@ -32,10 +32,6 @@ def main(quiet=False, traceback=False):
     log.traceback = traceback
 
 
-@main.command('run-server')
-@click.option('-h','--host', default='127.0.0.1')
-@click.option('-p','--port', default=8000)
-@click.argument('publish', default='rabbitmq://127.0.0.1:5672/')
 def run_server(host, port, publish):
     publish = publish
     connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
@@ -62,6 +58,12 @@ def run_server(host, port, publish):
 
     app.run(host = host,port = port,threaded=True)
 
+@main.command('run-server')
+@click.option('-h','--host', default='127.0.0.1')
+@click.option('-p','--port', default=8000)
+@click.argument('publish', default='rabbitmq://127.0.0.1:5672/')
+def run_server_cli(host,port,publish):
+    run_server(host,port,publish)
 
 if __name__ == '__main__':
     main()

@@ -1,5 +1,5 @@
 from .api import run_api_server
-from .client import upload_sample
+from .client import * # upload_sample
 from .server import run_server
 #from .thought import Thought
 from .parsers import run_parser

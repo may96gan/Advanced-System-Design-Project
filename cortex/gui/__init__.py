@@ -14,12 +14,6 @@ import pymongo
 def main(quiet=False, traceback=False):
     pass
 
-
-
-@main.command('run-server')
-@click.option('-h','--host', default='127.0.0.1')
-@click.option('-p','--port', default=8080)
-@click.option('-d','--database', default='mongodb://localhost:27017/')
 def run_server(host='127.0.0.1', port=8080, database='mongodb://localhost:27017/'):
     client = pymongo.MongoClient(database)
     db = client.db
@@ -95,6 +89,11 @@ def run_server(host='127.0.0.1', port=8080, database='mongodb://localhost:27017/
 
     app.run(host = host,port = port,threaded=True)
     
-
+@main.command('run-server')
+@click.option('-h','--host', default='127.0.0.1')
+@click.option('-p','--port', default=8080)
+@click.option('-d','--database', default='mongodb://localhost:27017/')
+def run_server_cli(host,port,database):
+    run_server(host,port,database)
 if __name__ == '__main__':
     main()
