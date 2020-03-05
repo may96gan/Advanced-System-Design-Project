@@ -9,9 +9,9 @@ An example package. See [full documentation](https://advanced-system-design-foob
 1. Clone the repository and enter it:
 
     ```sh
-    $ git clone git@github.com:may96gan/Advanced-System-Design-Project.git
+    $ git clone https://github.com/may96gan/cortex
     ...
-    $ cd Advanced-System-Design-Project/
+    $ cd cortex/
     ```
 
 2. Run the installation script and activate the virtual environment:
@@ -20,74 +20,99 @@ An example package. See [full documentation](https://advanced-system-design-foob
     $ ./scripts/install.sh
     ...
     $ source .env/bin/activate
-    [Advanced-System-Design-Project] $ # you're good to go!
+    [cortex] $ # you're good to go!
     ```
-
-3. To check that everything is working as expected, run the tests:
-
-
+ 
+3. Run dockers:
     ```sh
-    $ pytest tests/
+    $ docker run -d -p 5672:5672 rabbitmq
     ...
-    ```
+    $ docker run -d -p 27017:27017 mongo 
 
 ## Usage
 
-The `cortex` packages provides the following classes:
+The `cortex` packages provides the following packages:
 
-- `Foo`
+- `server`
 
-    This class encapsulates the concept of `foo`, and returns `"foo"` when run.
-
-    In addition, it provides the `inc` method to increment integers, and the
-    `add` method to sum them.
+    The server listen on host:port and pass received messages to message queue.
 
     ```pycon
-    >>> from foobar import Foo
-    >>> foo = Foo()
-    >>> foo.run()
-    'foo'
-    >>> foo.inc(1)
-    2
-    >>> foo.add(1, 2)
-    3
+    >>> from cortex.server import run_server
+    >>> run_server(host='127.0.0.1', port=8000, publish=print_message)
     ```
+ 
+- `client`
 
-- `Bar`
-
-    This class encapsulates the concept of `bar`; it's very similar to `Foo`,
-    except it returns `"bar"` when run.
+    This package provides the upload_sample function, 
+    which accepts host, port and a path,
+    reads the sample in path and uploads it to host:port.
 
     ```pycon
-    >>> from foobar import Bar
-    >>> bar = Bar()
-    >>> bar.run()
-    'bar'
+    >>> from cortex.client import upload_sample
+    >>> upload_sample(host='127.0.0.1', port=8000, path='sample.mind.gz')
     ```
+    
+ - `parsers`
+
+    This package provides the run_parser function, 
+    which accepts parser name and a raw data - as consumed from the message queue,
+    parse it, returns the result and publishes it to a dedicated topic.
+    Available parsers: 
+    Pose: Collects the translation and the rotation of the user's head at a given timestamp, and publishes the result to a dedicated               topic.
+    Feelings: Collects the feelings the user was experiencing at any timestamp, and publishes the result to a dedicated topic.
+
+    ```pycon
+    >>> from cortex.parsers import run_parser
+    >>> data = <body of message queue's callback>
+    >>> result = run_parser(<parser_name>, data)
+    ```
+    
+ - `saver`
+ 
+    This package connects to a database, accepts a topic name and some data, as consumed from the message queue, and saves it to the         database.
+    
+    ```pycon
+    >>> from cortex.saver import Saver
+    >>> saver = Saver(database_url)
+    >>> data = …
+    >>> saver.save('pose', data)
+    ```
+- `api`
+
+    listen on host:port and serve data from database_url
+    
+    ```pycon
+    >>> from cortex.api import run_api_server
+    >>> run_api_server(
+    ...     host = '127.0.0.1',
+    ...     port = 5000,
+    ...     database_url = 'postgresql://127.0.0.1:5432',
+    ... )
+    ```
+listen on host:port and serve data from database_url
+
+
 
 The `cortex` package also provides a command-line interface:
 
-```sh
-$ python -m cortex
-foobar, version 0.1.0
-```
-
-All commands accept the `-q` or `--quiet` flag to suppress output, and the `-t`
-or `--traceback` flag to show the full traceback when an exception is raised
-(by default, only the error message is printed, and the program exits with a
-non-zero code).
-
-The CLI provides the `client` command, with the `upload' subcommand:
+The CLI provides the following subcommands:
 
 ```sh
-$ python -m cortex client upload <host:port> <user_id> <thought>
+$ python -m cortex.client upload-sample \
+      -h/--host (default='127.0.0.1')             \
+      -p/--port (default=8000)                    \
+      <path_to_sample_file>
 
 ```
 
-The CLI further provides the `server` command, with the `run` subcommand.
 
 ```sh
-$ python -m cortex server run <host:port> <path to data_dir>
+$ python -m cortex.server run-server \
+      -h/--host (default='127.0.0.1')          \
+      -p/--port (default=8000)                 \
+      '<URL to a message queue> (default=rabbitmq://127.0.0.1:5672/')
+
 ```
 
 
