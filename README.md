@@ -152,6 +152,10 @@ $ python -m cortex.server run-server \
 
 ```
 
+```sh
+$ python -m cortex.api run-server
+```
+
 The `cortex` package also provides a graphical user interface:
 (You can also run this command with no arguments. Those are the default arguments.)
 
