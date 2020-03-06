@@ -6,36 +6,12 @@ from bson.objectid import ObjectId
 import click
 import pymongo
 
-class Log:
-    
-    def __init__(self):
-        self.quiet = False
-        self.traceback = False
-
-    def __call__(self, message):
-        if self.quiet:
-            return
-        if self.traceback and sys.exc_info(): # there's an active exception
-            message += os.linesep + traceback.format_exc().strip()
-        click.echo(message)
-
-
-log = Log()
-
 @click.group()
 @click.option('-q', '--quiet', is_flag=True)
 @click.option('-t', '--traceback', is_flag=True)
 def main(quiet=False, traceback=False):
-    log.quiet = quiet
-    log.traceback = traceback
+    pass
 
-
-
-
-@main.command('run-server')
-@click.option('-h','--host', default='127.0.0.1')
-@click.option('-p','--port', default=5000)
-@click.option('-d', '--database', default='mongodb://localhost:27017/')
 def run_api_server(host='127.0.0.1', port=5000, database='mongodb://localhost:27017/'):
     client = pymongo.MongoClient(database)
     db = client.db
@@ -89,6 +65,12 @@ def run_api_server(host='127.0.0.1', port=5000, database='mongodb://localhost:27
 
     app.run(host = host,port = port,threaded=True)
     
+@main.command('run-server')
+@click.option('-h','--host', default='127.0.0.1')
+@click.option('-p','--port', default=5000)
+@click.option('-d', '--database', default='mongodb://localhost:27017/')
+def run_server_cli(host,port,database):
+    run_api_server(host,port,database)
 
 if __name__ == '__main__':
     main()
