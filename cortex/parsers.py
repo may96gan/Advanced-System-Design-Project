@@ -2,22 +2,6 @@ import click
 import json
 import pika
 
-class Log:
-    
-    def __init__(self):
-        self.quiet = False
-        self.traceback = False
-
-    def __call__(self, message):
-        if self.quiet:
-            return
-        if self.traceback and sys.exc_info(): # there's an active exception
-            message += os.linesep + traceback.format_exc().strip()
-        click.echo(message)
-
-
-log = Log()
-
 def parse_pose(snapshot):
     json_user = (json.loads(snapshot))
     json_snap = (json.loads(snapshot))['pose']
