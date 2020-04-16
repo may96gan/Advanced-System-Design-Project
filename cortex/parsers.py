@@ -1,6 +1,7 @@
 import click
 import json
 import pika
+from PIL import Image as PIL
 
 def parse_pose(snapshot):
     json_user = (json.loads(snapshot))
@@ -50,6 +51,55 @@ def parse_feelings(snapshot):
 #parse_feelings.field = 'feelings'
 
 
+def parse_color_image(snapshot):
+    json_user = (json.loads(snapshot))
+    json_snap = (json.loads(snapshot))['color_image']
+    if not json_snap:
+        return
+    # path = context.path('color_image.jpg')
+    size = snapshot.color_image.width, snapshot.color_image.height
+    # image = PIL.new('RGB', size)
+    # image.putdata(snapshot.color_image.data)
+    # image.save(path)
+    return json.dumps(dict(
+        user_id = json_user['userId'],
+        user_name = json_user['username'],
+        user_bday = json_user['birthday'],
+        user_gender = json_user.get('gender',2),
+        snap_datetime = json_user.get('datetime'),
+        color_image = dict(
+            path = path,
+            height = json_snap.get('height',0),
+            width = json_snap.get('width',0),
+        ),
+    ))
+
+def parse_depth_image(snapshot):
+    json_user = (json.loads(snapshot))
+    json_snap = (json.loads(snapshot))['depth_image']
+    if not json_snap:
+        return
+    # path = context.path('color_image.jpg')
+    size = snapshot.depth_image.width, snapshot.depth_image.height
+    # image = PIL.new('RGB', size)
+    # image.putdata(snapshot.color_image.data)
+    # image.save(path)
+    return json.dumps(dict(
+        user_id = json_user['userId'],
+        user_name = json_user['username'],
+        user_bday = json_user['birthday'],
+        user_gender = json_user.get('gender',2),
+        snap_datetime = json_user.get('datetime'),
+        color_image = dict(
+            path = path,
+            height = json_snap.get('height',0),
+            width = json_snap.get('width',0),
+        ),
+    ))
+
+
+
+
 def run_parser(parserName, data):
     connection = pika.BlockingConnection(pika.ConnectionParameters(host='localhost'))
     channel = connection.channel()
@@ -66,4 +116,15 @@ def run_parser(parserName, data):
                               routing_key='parser_results',
                               body=json.dumps(poseF))
         return parse_feelings(data)
-
+    if parserName=='color_image':
+        poseC = parse_color_image(data)
+        channel.basic_publish(exchange='topic_results',
+                              routing_key='parser_results',
+                              body=json.dumps(poseC))
+        return parse_color_image(data)
+    if parserName=='depth_image':
+        poseD = parse_depth_image(data)
+        channel.basic_publish(exchange='topic_results,
+                              routing_key='parser_results',
+                              body=json.dumps(poseD))
+        return parse_depth_image(data)
