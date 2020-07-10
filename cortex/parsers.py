@@ -1,8 +1,12 @@
 import click
 import json
 import pika
-from PIL import Image as PIL
-
+from pathlib import Path as path
+from PIL import Image
+#from PIL import Image as PIL
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn
 def parse_pose(snapshot):
     json_user = (json.loads(snapshot))
     json_snap = (json.loads(snapshot))['pose']
@@ -52,15 +56,23 @@ def parse_feelings(snapshot):
 
 
 def parse_color_image(snapshot):
+    print("start parse_color_image")
     json_user = (json.loads(snapshot))
-    json_snap = (json.loads(snapshot))['color_image']
+    json_snap = (json.loads(snapshot))['colorImage']
     if not json_snap:
         return
-    # path = context.path('color_image.jpg')
-    size = snapshot.color_image.width, snapshot.color_image.height
-    # image = PIL.new('RGB', size)
-    # image.putdata(snapshot.color_image.data)
-    # image.save(path)
+    path = snapPath(json_user, 'color_image.jpg')
+    mypath = (json.loads(snapshot))['colorPath']
+    print(f' COLOR PATH = {mypath}')
+    #color_path = path(mypath)
+    with open(mypath, 'rb') as con1:
+        img_bytes = con1.read()
+    size = json_snap.get('width',0), json_snap.get('height',0)
+    img1 = Image.frombytes('RGB', size,img_bytes)
+    img1.save(path)
+    print(f'color image path = {path}')
+    print(f'color image size = {size}')
+    print("color image saved!")
     return json.dumps(dict(
         user_id = json_user['userId'],
         user_name = json_user['username'],
@@ -76,27 +88,55 @@ def parse_color_image(snapshot):
 
 def parse_depth_image(snapshot):
     json_user = (json.loads(snapshot))
-    json_snap = (json.loads(snapshot))['depth_image']
+    json_snap = (json.loads(snapshot))['depthImage']
     if not json_snap:
         return
-    # path = context.path('color_image.jpg')
-    size = snapshot.depth_image.width, snapshot.depth_image.height
-    # image = PIL.new('RGB', size)
-    # image.putdata(snapshot.color_image.data)
-    # image.save(path)
+    path = snapPath(json_user,'depth_image.jpg')
+    size = json_snap.get('height',0), json_snap.get('width',0)
+    #image = PIL.new('RGB', size)
+    #data = json_snap.get('data',0)
+    a = type(json_snap.get('data',0))
+    #print(f'DATA TYPE IS {a}')
+    #print(f'SIZE TYPE IS {type(size)}')
+    data = np.array(list(json_snap.get('data',0))).reshape([json_snap.get('height',0), json_snap.get('width',0)])
+    plt.imshow(data, cmap='hot', interpolation='nearest')
+    plt.savefig(path)
+    #plt.show()
+    #plt.figure()
+    #ax = seaborn.heatmap(data)
+    #ax.get_figure().savefig(path)
+    #print(data[:100])
+    #image.putdata(data)
+    #image.show()
+    #image.save(path)
     return json.dumps(dict(
         user_id = json_user['userId'],
         user_name = json_user['username'],
         user_bday = json_user['birthday'],
         user_gender = json_user.get('gender',2),
         snap_datetime = json_user.get('datetime'),
-        color_image = dict(
+        depth_image = dict(
             path = path,
             height = json_snap.get('height',0),
             width = json_snap.get('width',0),
         ),
     ))
 
+
+
+def snapPath(json_user, fileType):
+    print("in snapPath")
+    datet = json_user.get('datetime')
+    p = path('snapshots_data') / json_user['userId'] / datet
+    if not p.exists():
+        p.mkdir(parents=True, exist_ok=True)
+        # fn = p / f'{timestamp:%Y-%m-%d_%H-%M-%S}'
+    fn = p / fileType
+    return str(fn.absolute())
+        # with open(fn, 'a') as out:
+        #         if (out.tell() != 0):
+        #             thought = '\n' + thought
+        #         out.write(thought)
 
 
 
@@ -118,13 +158,17 @@ def run_parser(parserName, data):
         return parse_feelings(data)
     if parserName=='color_image':
         poseC = parse_color_image(data)
+        print("before ")
+        # print(poseC)
         channel.basic_publish(exchange='topic_results',
                               routing_key='parser_results',
                               body=json.dumps(poseC))
+        print("after ")
+        # print(poseC)
         return parse_color_image(data)
     if parserName=='depth_image':
         poseD = parse_depth_image(data)
-        channel.basic_publish(exchange='topic_results,
+        channel.basic_publish(exchange='topic_results',
                               routing_key='parser_results',
                               body=json.dumps(poseD))
         return parse_depth_image(data)

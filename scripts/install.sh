@@ -12,6 +12,8 @@ function main {
     .env/bin/pip install flask
     .env/bin/pip install bson
     .env/bin/pip install pymongo
+    .env/bin/pip install numpy
+    .env/bin/pip install matplotlib
     .env/bin/pip install pika --upgrade
     .env/bin/pip install -r requirements.txt
 }

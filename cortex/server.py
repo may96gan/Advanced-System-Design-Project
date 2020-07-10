@@ -17,7 +17,10 @@ def main(quiet=False, traceback=False):
 
 def run_server(host, port, publish):
     publish = publish
-    
+    connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))	
+    channel = connection.channel()	
+    channel.exchange_declare(exchange='snapshots',exchange_type='fanout')	
+    #channel.queue_declare(queue='current_snapshots')
     app = Flask(__name__)
 
     @app.route('/config', methods = ['GET'])
@@ -29,7 +32,10 @@ def run_server(host, port, publish):
     def newSnapshot():
         print("in server snapshot")
         snapshot = request.get_data()
-        publish(snapshot)
+        channel.basic_publish(exchange='snapshots',
+                              routing_key='',	
+                              body=snapshot)
+        # publish(snapshot)
         print("done")
         return "ok"
         

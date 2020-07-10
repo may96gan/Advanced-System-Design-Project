@@ -71,6 +71,10 @@ def run_server(host='127.0.0.1', port=8080, database='mongodb://localhost:27017/
             res.append('pose')
         if 'feelings' in snapshot:
             res.append('feelings')
+        if 'color_image' in snapshot:
+            res.append('color_image')
+        if 'depth_image' in snapshot:
+            res.append('depth_image')
         return flask.render_template('snapshot.html',user=user,id=snapshot['_id'], datetime=datetime.datetime.fromtimestamp(int(snapshot['datetime'])/1000),results=res)
 
     @app.route('/users/<int:user_id>/snapshots/<snapshot_id>/<result_name>', methods = ['GET'])
@@ -83,6 +87,9 @@ def run_server(host='127.0.0.1', port=8080, database='mongodb://localhost:27017/
             return flask.render_template('notFound.html', error='snapshot')
         if result_name not in snapshot:
             return flask.render_template('notFound.html', error='result')
+        #if result_name=='color_image':
+            #return flask.render_template('result.html',name=result_name, result=snapshot[result_name], path=snapshot[result_name]['path'])
+        #return flask.render_template('result.html',name=result_name, result=snapshot[result_name],path="")
         return flask.render_template('result.html',name=result_name, results=[(k,v) for k,v in snapshot[result_name].items()])
 
 
