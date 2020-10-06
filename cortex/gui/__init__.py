@@ -87,7 +87,8 @@ def run_server(host='127.0.0.1', port=8080, database='mongodb://localhost:27017/
             return flask.render_template('notFound.html', error='snapshot')
         if result_name not in snapshot:
             return flask.render_template('notFound.html', error='result')
-        #if result_name=='color_image':
+        if result_name=='color_image':
+            return flask.render_template('image.html',name=result_name, path=snapshot[result_name]['path'])
             #return flask.render_template('result.html',name=result_name, result=snapshot[result_name], path=snapshot[result_name]['path'])
         #return flask.render_template('result.html',name=result_name, result=snapshot[result_name],path="")
         return flask.render_template('result.html',name=result_name, results=[(k,v) for k,v in snapshot[result_name].items()])
