@@ -34,6 +34,7 @@ class Saver:
                 'gender': userJ['user_gender'],
             })
             result = self.snapshots.insert_one({
+                '_id':str(ObjectId()),
                 'user_id': user_id,
                 'datetime': datetime,
                 topicName: userJ[topicName],
