@@ -45,7 +45,11 @@ def upload_sample(host, port, path):
         #img.save('/home/user/Downloads/m1i.jpg')
         #print("sabe")
         datet = snapshot.datetime
-        p = Path("snapshots_data") / str(u_id) / str(datet)
+        #p = Path("snapshots_data") / str(u_id) / str(datet)
+        curDir = Path.cwd()
+        guiDir = curDir / 'cortex' / 'gui' / 'static'
+        p = guiDir / str(u_id) / str(datet)
+        print(f'********path={p}******')
         if not p.exists():
             p.mkdir(parents=True, exist_ok=True)
         fn = p / 'color.txt'

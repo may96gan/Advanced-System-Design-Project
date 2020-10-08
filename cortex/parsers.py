@@ -1,7 +1,7 @@
 import click
 import json
 import pika
-from pathlib import Path as path
+from pathlib import Path
 from PIL import Image
 #from PIL import Image as PIL
 import numpy as np
@@ -80,7 +80,7 @@ def parse_color_image(snapshot):
         user_gender = json_user.get('gender',2),
         snap_datetime = json_user.get('datetime'),
         color_image = dict(
-            path = path,
+            path = path[path.find('/static'):],
             height = json_snap.get('height',0),
             width = json_snap.get('width',0),
         ),
@@ -116,7 +116,7 @@ def parse_depth_image(snapshot):
         user_gender = json_user.get('gender',2),
         snap_datetime = json_user.get('datetime'),
         depth_image = dict(
-            path = path,
+            path = path[path.find('/static'):],
             height = json_snap.get('height',0),
             width = json_snap.get('width',0),
         ),
@@ -127,11 +127,18 @@ def parse_depth_image(snapshot):
 def snapPath(json_user, fileType):
     print("in snapPath")
     datet = json_user.get('datetime')
-    p = path('snapshots_data') / json_user['userId'] / datet
-    if not p.exists():
-        p.mkdir(parents=True, exist_ok=True)
+    curDir = Path.cwd() / 'cortex'
+    guiDir = curDir / 'gui' / 'static'
+    userDir = guiDir / json_user['userId'] / datet
+    print(f'**********************userDir IS {userDir}**********************')
+    if not userDir.exists():
+        userDir.mkdir(parents=True, exist_ok=True)
+
+    # p = Path('snapshots_data') / json_user['userId'] / datet
+    # if not p.exists():
+    #     p.mkdir(parents=True, exist_ok=True)
         # fn = p / f'{timestamp:%Y-%m-%d_%H-%M-%S}'
-    fn = p / fileType
+    fn = userDir / fileType
     return str(fn.absolute())
         # with open(fn, 'a') as out:
         #         if (out.tell() != 0):
