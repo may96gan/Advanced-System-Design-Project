@@ -33,7 +33,7 @@ An example package. See [full documentation](https://advanced-system-design-foob
 
 First, run the following commands:
 ```pycon
-import json, pika
+import json, pika, PIL
 from cortex.parsers import run_parser
 from cortex.saver import Saver
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
@@ -45,6 +45,7 @@ channel.queue_bind(exchange='snapshots',queue=queue_name)#channel.queue_declare(
 
 def callback(channel,method,properties,body):
     print("start snap")
+    json_snap = (json.loads(body))['feelings']
     saver = Saver('mongodb://localhost:27017/')
     f = run_parser('feelings',body)
     if f:
@@ -52,12 +53,19 @@ def callback(channel,method,properties,body):
     p=run_parser('pose',body)
     if p:
         saver.save('pose',p)
+    c=run_parser('color_image',body)
+    if c:
+        saver.save('color_image',c)
+    d=run_parser('depth_image',body)
+    if d:
+       saver.save('depth_image',d)
     print("done snap")
 
 
 channel.basic_consume(queue=queue_name, auto_ack=True, on_message_callback=callback)
 
 channel.start_consuming()
+
 ```
 
 The `cortex` packages provides the following packages:
